@@ -1,0 +1,129 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Ler {
+    public static String umaString (){
+        String s = "";
+        try{
+            BufferedReader in = new BufferedReader ( new InputStreamReader
+                    (System.in));
+            s= in.readLine();
+        } catch (IOException e){
+            System.out.println("Erro ao ler fluxo de entrada.");
+        }
+        return s;
+    }
+    public static int umInt(){
+        while(true){
+            try{
+                return Integer.valueOf(umaString().trim()).intValue();
+            }
+            catch(Exception e){
+                System.out.println("Não é um inteiro válido!!!");
+            }
+        }
+    }
+    public static byte umByte(){
+        while(true){
+            try{
+                return Byte.valueOf(umaString().trim()).byteValue();
+            }
+            catch(Exception e){
+                System.out.println("Não é um byte válido!!!");
+            }
+        }
+    }
+    public static short umShort(){
+        while(true){
+            try{
+                return Short.valueOf(umaString().trim()).shortValue();
+            }
+            catch(Exception e){
+                System.out.println("Não é um short válido!!!");
+            }
+        }
+    }
+    public static long umLong(){
+        while(true){
+            try{
+                return Long.valueOf(umaString().trim()).longValue();
+            }
+            catch(Exception e){
+                System.out.println("Não é um long válido!!!");
+            }
+        }
+    }
+    public static float umFloat(){
+        while(true){
+            try{
+                return Float.valueOf(umaString().trim()).floatValue();
+            }
+            catch(Exception e){
+                System.out.println("Não é um float válido!!!");
+            }
+        }
+    }
+    public static double umDouble(){
+        while(true){
+            try{
+                return Double.valueOf(umaString().trim()).doubleValue();
+            }
+            catch(Exception e){
+                System.out.println("Não é um double válido!!!");
+            }
+        }
+    }
+    public static char umChar(){
+        while(true){
+            try{
+                return umaString().charAt(0);
+            }
+            catch(Exception e){
+                System.out.println("Não é um char válido!!!");
+            }
+        }
+    }
+    public static boolean umBoolean(){
+        while(true){
+            try{
+                return Boolean.valueOf(umaString().trim()).booleanValue();
+            }
+            catch(Exception e){
+                System.out.println("Não é um boolean válido!!!");
+            }
+        }
+    }
+    
+    public static String sortearPalavra() {
+        ArrayList<String> todasAsPalavras = new ArrayList<>();
+        String caminhoDoFicheiro = "palavras.txt";
+
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoDoFicheiro))) {
+            String linha;
+            
+            while ((linha = br.readLine()) != null) {
+                if (!linha.trim().isEmpty()) {
+                    todasAsPalavras.add(linha.trim().toUpperCase());
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao ler o ficheiro: " + e.getMessage());
+            return "COMPUTADOR";
+        }
+        
+        if (todasAsPalavras.isEmpty()) {
+            return "COMPUTADOR"; 
+        }
+        
+        Random random = new Random();
+        int indiceSorteado = random.nextInt(todasAsPalavras.size());
+        
+        return todasAsPalavras.get(indiceSorteado);
+    }
+
+}// class Ler
