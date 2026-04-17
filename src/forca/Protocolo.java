@@ -30,7 +30,12 @@ public class Protocolo {
     }
 
     public static String getEndWin(ArrayList<Player> jogadoresVencedores, String palavra) {
-        return end_win + " " + palavra;
+        StringBuilder ids = new StringBuilder();
+        for (int i = 0; i < jogadoresVencedores.size(); i++) {
+            if (i > 0) ids.append(",");
+            ids.append(jogadoresVencedores.get(i).getID());
+        }
+        return end_win + " " + ids.toString() + " " + palavra;
     }
 
     public static String getEndLose(String palavra) {
