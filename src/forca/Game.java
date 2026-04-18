@@ -30,6 +30,9 @@ public class Game {
             this.palavraEscondida[i] = '_';
         }
 
+        for(Player p : jogadores) {
+            p.setTentativasRestantes(tentativasRestantes);
+        }
         String msgStart = Protocolo.getStart(getMascaraString(), tentativasRestantes, 20000);
         enviarParaTodos(msgStart);
     }
@@ -40,6 +43,11 @@ public class Game {
             return;
         }
 
+        Player jogador = getPlayerByID(jogadorID);
+        if (jogador == null) {
+            System.out.println("Jogador com ID " + jogadorID + " não encontrado.");
+            return;
+        }
         jogadasNestaronda++;
         boolean contribuiu = false;
 
@@ -58,13 +66,12 @@ public class Game {
             if (tentativa.equalsIgnoreCase(palavra)) {
                 palavraEscondida = palavra.toUpperCase().toCharArray();
                 contribuiu = true;
-                jogadoresVencedores.add(getPlayerByID(jogadorID));
             }
         }
         // tentativa vazia (timeout) → contribuiu fica false
 
         if (!contribuiu) {
-            tentativasRestantes--;
+            jogador.reduzirTentativas();
         }
 
         if (jogadasNestaronda >= jogadoresAtivos) {
@@ -76,7 +83,7 @@ public class Game {
                 enviarParaTodos(msgWin);
                 gameOver = true;
 
-            } else if (tentativasRestantes <= 0) {
+            } else if (jogador.getTentativasRestantes() <= 0) {
                 String msgLose = Protocolo.getEndLose(palavra);
                 enviarParaTodos(msgLose);
                 gameOver = true;
@@ -84,7 +91,7 @@ public class Game {
             } else {
                 ronda++;
                 jogadoresVencedores.clear();
-                String msgRound = Protocolo.getRound(ronda, getMascaraString(), tentativasRestantes, letrasUsadas);
+                String msgRound = Protocolo.getRound(ronda, getMascaraString(), jogador.getTentativasRestantes(), letrasUsadas);
                 enviarParaTodos(msgRound);
             }
 
