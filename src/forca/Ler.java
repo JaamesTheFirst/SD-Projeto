@@ -100,29 +100,29 @@ public class Ler {
     
     public static String sortearPalavra() {
         ArrayList<String> todasAsPalavras = new ArrayList<>();
-        String caminhoDoFicheiro = "palavras.txt";
 
-        
-        try (BufferedReader br = new BufferedReader(new FileReader(caminhoDoFicheiro))) {
-            String linha;
-            
-            while ((linha = br.readLine()) != null) {
-                if (!linha.trim().isEmpty()) {
-                    todasAsPalavras.add(linha.trim().toUpperCase());
+        InputStream is = Ler.class.getResourceAsStream("palavras.txt");
+        if (is != null) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(is, java.nio.charset.StandardCharsets.UTF_8))) {
+                String linha;
+                while ((linha = br.readLine()) != null) {
+                    if (!linha.trim().isEmpty()) {
+                        todasAsPalavras.add(linha.trim().toUpperCase());
+                    }
                 }
+            } catch (IOException e) {
+                System.out.println("Erro ao ler o ficheiro via classpath: " + e.getMessage());
+                return "COMPUTADOR";
             }
-        } catch (IOException e) {
-            System.out.println("Erro ao ler o ficheiro: " + e.getMessage());
+        } 
+
+        if (todasAsPalavras.isEmpty()) {
             return "COMPUTADOR";
         }
-        
-        if (todasAsPalavras.isEmpty()) {
-            return "COMPUTADOR"; 
-        }
-        
+
         Random random = new Random();
         int indiceSorteado = random.nextInt(todasAsPalavras.size());
-        
+
         return todasAsPalavras.get(indiceSorteado);
     }
 
