@@ -1,5 +1,5 @@
-import java.net.*;
 import java.io.*;
+import java.net.*;
 import java.util.Scanner;
 
 public class Cliente {
@@ -55,7 +55,7 @@ public class Cliente {
                 System.out.print(ForcaVisual.desenhar(0));
             }
             System.out.println("  A palavra era: " + palavra);
-            System.out.println();
+            System.out.println("  Pressione ENTER para voltar ao menu principal.");
         }
     }
 
@@ -182,10 +182,15 @@ public class Cliente {
             while (!jogoTerminado) {
                 if (!teclado.hasNextLine()) break;
                 String input = teclado.nextLine().trim();
+                
+                if (jogoTerminado) {
+                    break;
+                }
+                
                 if (input.equalsIgnoreCase("sair")) {
                     break;
                 }
-                if (!input.isEmpty() && !jogoTerminado) {
+                if (!input.isEmpty()) {
                     out.println(Protocolo.getGuess(input));
                 }
             }
@@ -196,7 +201,9 @@ public class Cliente {
             printlnSeguro("\n  Erro de ligação: " + e.getMessage());
         } finally {
             if (socket != null && !socket.isClosed()) {
-                try { socket.close(); } catch (IOException ignored) {}
+                try { 
+                    socket.close(); 
+                } catch (IOException ignored) {}
             }
         }
     }
