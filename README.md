@@ -43,3 +43,8 @@ java -cp out:src/forca Cliente
 | C→S     | `GUESS <tentativa>`                    | Jogada do cliente        |
 
 
+##V VÍDEO DEMONSTRAÇÃO
+
+https://youtu.be/90eAnSxK30w
+
+
