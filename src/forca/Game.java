@@ -10,9 +10,9 @@ public class Game {
     private ArrayList<Character> letrasUsadas;
     private ArrayList<Player> jogadoresVencedores;
     private ArrayList<Player> jogadores;
-    private volatile boolean gameOver = false;
+    private boolean gameOver = false;
 
-    public boolean isGameOver() {
+    public synchronized boolean isGameOver() {
         return gameOver;
     }
 

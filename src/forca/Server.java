@@ -70,25 +70,8 @@ public class Server {
 
             System.out.println("\n  Jogo a começar com " + jogadores.size() + " jogadores!");
 
-            // ---- Rejeitar novas ligações (FULL) ----
-            Thread rejectThread = new Thread(() -> {
-                try {
-                    ss.setSoTimeout(0);
-                    while (true) {
-                        Socket s = ss.accept();
-                        try {
-                            PrintWriter pw = new PrintWriter(s.getOutputStream(), true);
-                            pw.println(Protocolo.getFull());
-                        } finally {
-                            s.close();
-                        }
-                    }
-                } catch (IOException e) {
-                    // ServerSocket fechado
-                }
-            });
-            rejectThread.setDaemon(true);
-            rejectThread.start();
+            // Fechar ServerSocket para rejeitar novas ligações
+            ss.close();
 
             // ---- Iniciar jogo ----
             Game jogo = new Game();

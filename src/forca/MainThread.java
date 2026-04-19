@@ -1,6 +1,5 @@
 import java.net.*;
 import java.io.*;
-import java.util.concurrent.CountDownLatch;
 
 public class MainThread extends Thread {
     private Socket socket;
@@ -9,7 +8,7 @@ public class MainThread extends Thread {
     private PrintWriter out;
     private BufferedReader in;
     private Game jogo;
-    private final CountDownLatch jogoLatch = new CountDownLatch(1);
+    private boolean jogoIniciado = false;
     private static final int ROUND_TIMEOUT_MS = 20000;
 
     public MainThread(Socket s, int id, int totalJogadores) {
@@ -26,9 +25,10 @@ public class MainThread extends Thread {
         }
     }
 
-    public void setJogo(Game jogo) {
+    public synchronized void setJogo(Game jogo) {
         this.jogo = jogo;
-        jogoLatch.countDown();
+        this.jogoIniciado = true;
+        notifyAll();
     }
 
     public void enviarMensagem(String msg) {
@@ -51,7 +51,11 @@ public class MainThread extends Thread {
             enviarMensagem(Protocolo.getWelcome(idJogador, totalJogadores));
 
             // Esperar até o jogo começar
-            jogoLatch.await();
+            synchronized (this) {
+                while (!jogoIniciado) {
+                    wait();
+                }
+            }
 
             // Definir timeout por ronda
             socket.setSoTimeout(ROUND_TIMEOUT_MS);
