@@ -50,8 +50,8 @@ public class Server {
                     MainThread t = new MainThread(s, id, id);
                     jogadores.add(new Player(id, t));
                     System.out.println("  Jogador " + id + " entrou.");
-                    if (jogadores.size() == 2) {
-                        System.out.println("  Lobby vai esperar mais " + (LOBBY_TIMEOUT_MS / 1000) + "s por mais jogadores...");
+                    if (jogadores.size() == 1) {
+                        System.out.println("  Primeiro jogador entrou. Lobby vai esperar " + (LOBBY_TIMEOUT_MS / 1000) + "s por mais jogadores...");
                         ss.setSoTimeout(LOBBY_TIMEOUT_MS);
                     }
                 }
@@ -70,8 +70,24 @@ public class Server {
 
             System.out.println("\n  Jogo a começar com " + jogadores.size() + " jogadores!");
 
-            // Fechar ServerSocket para rejeitar novas ligações
-            ss.close();
+            // Rejeitar novas ligações com mensagem FULL
+            ss.setSoTimeout(0);
+            Thread rejectThread = new Thread() {
+                public void run() {
+                    try {
+                        while (true) {
+                            Socket atrasado = ss.accept();
+                            PrintWriter pw = new PrintWriter(atrasado.getOutputStream(), true);
+                            pw.println(Protocolo.getFull());
+                            atrasado.close();
+                        }
+                    } catch (IOException e) {
+                        // ServerSocket fechado, sair
+                    }
+                }
+            };
+            rejectThread.setDaemon(true);
+            rejectThread.start();
 
             // ---- Iniciar jogo ----
             Game jogo = new Game();
